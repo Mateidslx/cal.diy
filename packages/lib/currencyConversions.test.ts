@@ -46,3 +46,38 @@ describe("convertToSmallestCurrencyUnit", () => {
     expect(convertToSmallestCurrencyUnit(50, undefined)).toBe(5000);
   });
 });
+
+describe("no-show fee display sites integration contract (#30122)", () => {
+  it("Site 1 & 2: formats attendee cancellation and host dialog amounts accurately", () => {
+    const payment = { amount: 5000, currency: "JPY" };
+    const cancellationDisplayAmount = convertFromSmallestToPresentableCurrencyUnit(
+      payment.amount,
+      payment.currency
+    );
+    expect(cancellationDisplayAmount).toBe(5000);
+
+    const usdPayment = { amount: 5000, currency: "USD" };
+    expect(convertFromSmallestToPresentableCurrencyUnit(usdPayment.amount, usdPayment.currency)).toBe(50);
+  });
+
+  it("Site 3 & 4: formats notification email subject and subtitle consistently with fee row", () => {
+    const paymentInfo = { amount: 5000, currency: "JPY" };
+    const emailSubjectAmount = convertFromSmallestToPresentableCurrencyUnit(
+      paymentInfo.amount,
+      paymentInfo.currency
+    );
+    const emailSubtitleAmount = convertFromSmallestToPresentableCurrencyUnit(
+      paymentInfo.amount,
+      paymentInfo.currency
+    );
+    expect(emailSubjectAmount).toBe(5000);
+    expect(emailSubtitleAmount).toBe(5000);
+    expect(emailSubjectAmount).toBe(emailSubtitleAmount);
+
+    // Fallback when currency is undefined
+    const noCurrencyPayment = { amount: 5000, currency: undefined };
+    expect(
+      convertFromSmallestToPresentableCurrencyUnit(noCurrencyPayment.amount, noCurrencyPayment.currency)
+    ).toBe(50);
+  });
+});

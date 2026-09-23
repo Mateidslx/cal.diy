@@ -17,6 +17,14 @@ const zeroDecimalCurrencies = [
   "XPF",
 ];
 
+/**
+ * Converts an amount in currency to the smallest unit (e.g. cents).
+ * For zero-decimal currencies (JPY, KRW, etc.), the amount remains unscaled.
+ *
+ * @param amount - The currency amount to convert.
+ * @param currency - Optional 3-letter ISO currency code.
+ * @returns The converted amount in the smallest currency unit.
+ */
 export const convertToSmallestCurrencyUnit = (amount: number, currency?: string) => {
   // Special cases
   if (currency && zeroDecimalCurrencies.includes(currency.toUpperCase())) {
@@ -25,6 +33,15 @@ export const convertToSmallestCurrencyUnit = (amount: number, currency?: string)
   return Math.round(amount * 100);
 };
 
+/**
+ * Converts an amount from the smallest unit to a human-presentable currency unit.
+ * For zero-decimal currencies (JPY, KRW, etc.), the amount is returned verbatim.
+ * For standard currencies, the amount is divided by 100.
+ *
+ * @param amount - The currency amount in smallest units.
+ * @param currency - Optional 3-letter ISO currency code.
+ * @returns The converted presentable amount.
+ */
 export const convertFromSmallestToPresentableCurrencyUnit = (amount: number, currency?: string) => {
   // Special cases
   if (currency && zeroDecimalCurrencies.includes(currency.toUpperCase())) {
